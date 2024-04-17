@@ -15,7 +15,7 @@ renamed as (
         address,
         state,
         _fivetran_deleted,
-        _fivetran_synced
+        _fivetran_synced AS date_load
 
     from source
 

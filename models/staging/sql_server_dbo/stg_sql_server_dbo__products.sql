@@ -9,12 +9,11 @@ source as (
 renamed as (
 
     select
-        product_id,
-        price,
-        name,
-        inventory,
-        _fivetran_deleted,
-        _fivetran_synced
+        product_id AS product_id
+        , name AS product_name
+        , price AS unit_price_usd
+        , inventory AS inventory
+        , _fivetran_synced AS date_load
 
     from source
 

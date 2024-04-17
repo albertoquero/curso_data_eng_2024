@@ -5,7 +5,10 @@ WITH stg_budget AS (
 
 renamed_casted AS (
     SELECT
-            *
+        product_id
+        , month
+        , quantity
+        , date_load
     FROM stg_budget
     )
 
