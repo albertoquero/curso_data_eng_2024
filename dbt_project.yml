@@ -66,6 +66,3 @@ models:
         +schema: core
       finance:
         +schema: finance
-    intermediate:
-      +database: AQUERO_DEV_GOLD_DB
-      +materialized: view
