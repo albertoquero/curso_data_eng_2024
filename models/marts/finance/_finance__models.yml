@@ -11,7 +11,7 @@ models:
         tests:
           - not_null
           - relationships:
-                to: ref('stg_products')
+                to: ref('stg_sql_server_dbo__products')
                 field: product_id  
       - name: quantity
         tests:
