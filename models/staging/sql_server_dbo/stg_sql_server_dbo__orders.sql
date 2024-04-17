@@ -2,28 +2,27 @@ with
 
 source as (
 
-    select * from {{ source('sql_server_dbo', 'orders') }}
+    select * from {{ ref('base_sql_server_dbo__orders') }}
 
 ),
 
 renamed as (
 
     select
-        order_id,
-        shipping_service,
-        shipping_cost,
-        address_id,
-        created_at as order_placed_date,
-        promo_id,
-        estimated_delivery_at,
-        order_cost,
-        user_id,
-        order_total,
-        delivered_at as  delivery_date,
-        tracking_id,
-        status,
-        _fivetran_deleted,
-        _fivetran_synced
+        order_id 
+        , user_id 
+        , promo_id
+        , address_id
+        , created_at AS created_at_utc
+        , order_cost AS item_order_cost_usd
+        , shipping_cost AS shipping_cost_usd
+        , order_total AS total_order_cost_usd
+        , tracking_id
+        , shipping_service
+        , estimated_delivery_at AS estimated_delivery_at_utc
+        , delivered_at AS delivered_at_utc
+        , status AS status_order
+        , _fivetran_synced as date_load
 
     from source
 

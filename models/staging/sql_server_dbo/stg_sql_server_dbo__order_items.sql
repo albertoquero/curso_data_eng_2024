@@ -9,11 +9,10 @@ source as (
 renamed as (
 
     select
-        order_id,
-        product_id,
-        quantity,
-        _fivetran_deleted,
-        _fivetran_synced
+         order_id
+        , product_id
+        , quantity
+        , _fivetran_synced AS date_load
 
     from source
 

@@ -16,19 +16,19 @@ SELECT
             ,e.user_id
             ,first_name
             ,email
-            ,min(e.created_at) first_event_time
-            ,max(e.created_at) last_event_time
-            ,(DATEDIFF(DAY, MIN(e.created_at)::timestamp, max(e.created_at)::timestamp) * 24 +
-            DATEDIFF(HOUR, MIN(e.created_at)::timestamp, max(e.created_at)::timestamp)) * 60 +
-            DATEDIFF(MINUTE, MIN(e.created_at)::timestamp, max(e.created_at)::timestamp) AS session_length_minutes
+            ,min(e.created_at_utc) first_event_time
+            ,max(e.created_at_utc) last_event_time
+            ,(DATEDIFF(DAY, MIN(e.created_at_utc)::timestamp, max(e.created_at_utc)::timestamp) * 24 +
+            DATEDIFF(HOUR, MIN(e.created_at_utc)::timestamp, max(e.created_at_utc)::timestamp)) * 60 +
+            DATEDIFF(MINUTE, MIN(e.created_at_utc)::timestamp, max(e.created_at_utc)::timestamp) AS session_length_minutes
             ,p.add_to_cart
             ,p.checkout
             ,p.package_shipped
             ,p.page_view
             
-    FROM   {{ ref('stg_sql_server_dbo__events') }} e
+    FROM   {{ ref('events') }} e
     left join
-     {{ ref('stg_sql_server_dbo__users') }} u
+     {{ ref('users') }} u
     on e.user_id = u.user_id
     left join 
     pivotar_tipo_eventos p

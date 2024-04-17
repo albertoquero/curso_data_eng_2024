@@ -1,48 +1,48 @@
-WITH dim_users AS (
+WITH users AS (
     SELECT * 
-    FROM {{ ref('stg_sql_server_dbo__users') }}
+    FROM {{ ref('users') }}
     ),
 
-dim_addresses AS (
+addresses AS (
     SELECT * 
-    FROM {{ ref('stg_sql_server_dbo__addresses') }}
+    FROM {{ ref('addresses') }}
     ),
-dim_promos AS (
+promos AS (
     SELECT * 
-    FROM {{ ref('stg_sql_server_dbo__promos') }}
+    FROM {{ ref('promos') }}
     ),
-fact_orders AS (
+orders AS (
     SELECT * 
-    FROM {{ ref('stg_sql_server_dbo__orders') }}
+    FROM {{ ref('orders') }}
     ),
-stg_order_items AS (
+orders_products AS (
     SELECT * 
-    FROM {{ ref('stg_sql_server_dbo__order_items') }}
+    FROM {{ ref('orders_products') }}
     ),
-fact_orders_products AS (
+orders_products_join AS (
     SELECT
         O.order_id 
         , O.user_id 
         , O.promo_id
         , O.address_id
         , OI.product_id
-        , O.order_placed_date
+        , O.created_at_utc
         , OI.quantity
-        , O.status
-        , O._fivetran_synced 
-    FROM fact_orders O
-    LEFT JOIN stg_order_items OI
+        , O.status_order
+        , O.date_load
+    FROM orders O
+    LEFT JOIN orders_products OI
       ON O.order_id = OI.order_id
     ),
 users_orders_agg AS (
     SELECT 
         user_id
         ,COUNT(o.order_id) AS total_number_orders
-        ,SUM(o.order_total ) AS total_order_cost_usd
-        ,SUM(o.shipping_cost ) AS total_shipping_cost_usd
-        ,SUM(p.discount ) AS total_discount_usd
-    FROM fact_orders O
-    LEFT JOIN dim_promos P
+        ,SUM(o.total_order_cost_usd ) AS total_order_cost_usd
+        ,SUM(o.shipping_cost_usd ) AS total_shipping_cost_usd
+        ,SUM(p.total_discount_usd ) AS total_discount_usd
+    FROM orders O
+    LEFT JOIN promos P
     ON o.promo_id = p.promo_id
     GROUP BY 1
     ),
@@ -51,7 +51,7 @@ users_orders_products_agg AS (
         user_id
         , SUM (quantity) AS total_quantity_product
         , COUNT(DISTINCT product_id ) AS total_different_product_purchased
-    FROM fact_orders_products
+    FROM orders_products_join
     GROUP BY 1
     ),    
 agg_users_orders AS (
@@ -61,8 +61,8 @@ agg_users_orders AS (
         ,u.last_name
         ,u.email
         ,u.phone_number
-        ,u.created_at
-        ,u.updated_at
+        ,u.created_at_utc
+        ,u.updated_at_utc
         ,a.address
         ,a.zipcode
         ,a.state
@@ -73,8 +73,8 @@ agg_users_orders AS (
         ,COALESCE(oa.total_discount_usd,0) AS total_discount_usd
         ,COALESCE(pa.total_quantity_product,0) AS total_quantity_product
         ,COALESCE(pa.total_different_product_purchased,0) AS total_different_product_purchased
-    FROM dim_users U
-    LEFT JOIN dim_addresses A
+    FROM users U
+    LEFT JOIN addresses A
         ON u.address_id = a.address_id
     LEFT JOIN users_orders_agg OA
         ON U.user_id = OA.user_id
