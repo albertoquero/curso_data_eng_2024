@@ -37,6 +37,6 @@ sources:
           - name: PRODUCT_ID
             tests:
               - relationships:
-                  to: source('sql_server_db','products')
-                  field: id
+                  to: source('sql_server_dbo','products')
+                  field: PRODUCT_ID
           - name: _FIVETRAN_SYNCED
