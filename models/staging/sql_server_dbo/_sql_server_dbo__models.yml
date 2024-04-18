@@ -306,14 +306,14 @@ models:
       - name: order_id
         description: >
           If the event is specific to an order (mostly used for checkout).
-        test:
+        tests:
           - relationships:
                 to: ref('stg_sql_server_dbo__orders')
                 field: order_id 
       - name: product_id
         description: >
           If the event is specific to a product.
-        test:
+        tests:
           - relationships:
                 to: ref('stg_sql_server_dbo__products')
                 field: product_id
