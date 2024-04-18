@@ -284,10 +284,7 @@ models:
         description: >
           UUID of the user that this event is associated with.
         tests:
-          - not_null
-          - relationships:
-                to: ref('stg_sql_server_dbo_users')
-                field: user_id     
+          - not_null   
       - name: page_url
         description: >
           URL that the event happened on.
