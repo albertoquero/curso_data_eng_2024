@@ -10,7 +10,16 @@ WITH conteo_tipo_eventos AS (
         PIVOT(sum(conteos) FOR event_type IN ('checkout', 'package_shipped', 'add_to_cart', 'page_view'))
       AS p (SESSION_ID, USER_ID, checkout, package_shipped, add_to_cart,page_view)
 
-)    
+) ,
+users AS (
+    SELECT * 
+    FROM {{ ref('users') }}
+    ) 
+,
+events AS (
+    SELECT * 
+    FROM {{ ref('events') }}
+    )   
 SELECT
           e.SESSION_ID
             ,e.user_id
@@ -26,9 +35,9 @@ SELECT
             ,p.package_shipped
             ,p.page_view
             
-    FROM   {{ ref('events') }} e
+    FROM   events e
     left join
-     {{ ref('users') }} u
+     users u
     on e.user_id = u.user_id
     left join 
     pivotar_tipo_eventos p
