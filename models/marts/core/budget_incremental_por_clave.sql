@@ -1,11 +1,14 @@
 {{ config(
-    materialized='incremental'
+    materialized='incremental',
+    unique_key = '_row'
     ) 
     }}
 
-WITH src_budget AS (
+
+WITH stg_budget AS (
     SELECT * 
-    FROM {{ source('google_sheets','budget') }}
+    FROM {{ ref('stg_google_sheets__budget') }}
+
     ),
 
 renamed_casted AS (
@@ -13,8 +16,8 @@ renamed_casted AS (
           _row
         , month
         , quantity 
-        , _fivetran_synced AS date_load
-    FROM src_budget
+        , date_load
+    FROM stg_budget
     )
 
 SELECT * FROM renamed_casted
