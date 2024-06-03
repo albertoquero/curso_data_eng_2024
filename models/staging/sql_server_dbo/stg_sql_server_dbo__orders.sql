@@ -1,15 +1,20 @@
-with 
+{{
+  config(
+    materialized='incremental'
+  )
+}}
 
-source as (
-
-    select * from {{ ref('base_sql_server_dbo__orders') }}
-
+with source as (
+    select * from {{ source('sql_server_dbo', 'orders') }}
+    
+    {% if is_incremental() %}
+    where _fivetran_synced > (select max(_fivetran_synced) from {{ this }} )
+    {% endif %}
 ),
 
 renamed as (
-
     select
-        order_id 
+          order_id 
         , user_id 
         , promo_id
         , address_id
@@ -23,9 +28,7 @@ renamed as (
         , delivered_at AS delivered_at_utc
         , status AS status_order
         , _fivetran_synced as date_load
-
     from source
-
 )
 
 select * from renamed

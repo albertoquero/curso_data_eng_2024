@@ -2,7 +2,7 @@ with
 
 src_promos  as (
 
-    select * from {{ ref('base_sql_server_dbo__promos') }}
+    select * from {{ source('sql_server_dbo', 'promos') }}
 
 ),
 
