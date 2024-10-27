@@ -15,7 +15,7 @@ renamed as (
         phone_number,
         total_orders,
         first_name,
-        email,
+        email as correo,
         _fivetran_deleted,
         _fivetran_synced as date_load
 
