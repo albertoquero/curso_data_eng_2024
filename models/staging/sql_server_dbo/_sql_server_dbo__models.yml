@@ -57,7 +57,7 @@ models:
           Last name of the user.
         tests:
           - not_null
-      - name: email 
+      - name: correo 
         description: >
           Email address of the user.
         tests:
