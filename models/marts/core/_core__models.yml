@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: budget_version
-    latest_version: 1
+    latest_version: 2
     config:
       materialized: table
       contract:
