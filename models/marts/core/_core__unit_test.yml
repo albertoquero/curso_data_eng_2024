@@ -5,16 +5,28 @@ unit_tests:
     given:
       - input: ref('stg_sql_server_dbo__users')
         rows:
-          - {email: ekollaschek2q@tuttocitta.it}
-          - {email: sdivers2p@msu.edu}
-          - {email: wheinecke2l@ebay.com}
-          - {email: fail_email}
+          - {correo: juan@hotmail.com}
+          - {correo: sdivers2p@msu.edu}
+          - {correo: wheinecke2l@ebay.com}
+          - {correo: fail_email}
     expect:
       rows:
-        - {email: ekollaschek2q@tuttocitta.it,    is_valid_email_address: true}
+        - {email: juan@hotmail.com,    is_valid_email_address: true}
         - {email: sdivers2p@msu.edu,    is_valid_email_address: true}
         - {email: wheinecke2l@ebay.com,    is_valid_email_address: true}
         - {email: fail_email,    is_valid_email_address: false}
+
+  - name: test_is_valid_name
+    description: "Check ifname  is valid"
+    model: users
+    given:
+      - input: ref('stg_sql_server_dbo__users')
+        rows:
+          - {first_name: Juan}
+
+    expect:
+      rows:
+        - {first_name: Juan, is_valid_first_name: True}
 
   - name: test_is_valid_email_with_csv_fixture
     description: "Check if email is valid"
@@ -29,7 +41,25 @@ unit_tests:
         - {email: ekollaschek2q@tuttocitta.it,    is_valid_email_address: true}
         - {email: sdivers2p@msu.edu,    is_valid_email_address: true}
         - {email: wheinecke2l@ebay.com,    is_valid_email_address: true}
-        - {email: fail_email,    is_valid_email_address: false} 
+        - {email: fail_email,    is_valid_email_address: false}
+
+  - name: test_is_valid_phone_with_csv_fixture
+    description: "Valida que un teléfono sea válido"
+    model: users
+    given:
+      - input: ref('stg_sql_server_dbo__users')
+        rows:
+          - {phone_number: 666-111-1112}
+          - {phone_number: 957-603-4563}
+          - {phone_number: 957-603458}
+
+
+    expect:
+      rows:
+        - {phone_number: 666-111-1112,    is_valid_phone_number: true}
+        - {phone_number: 957-603-4563,    is_valid_phone_number: true}
+        - {phone_number: 957-603458,    is_valid_phone_number: false}         
+
 
   - name: test_budget_incremental_mode_off
     model: budget_incremental

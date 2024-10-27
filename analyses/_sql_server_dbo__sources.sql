@@ -1,14 +1,13 @@
 {{
     codegen.generate_source(
-        schema_name = 'SQL_SERVER_DBO',
-        database_name = 'ALUMNOADMIN_DEV_BRONZE_DB',
+        schema_name = '',
+        database_name = 'AQUERO_DEV_BRONZE_DB',
         table_names = ['orders','order_items'],
         generate_columns = True,
         include_descriptions=True,
         include_data_types=True,
-        name='sql_server_dbo',
+        name='desarrollo',
         include_database=True,
         include_schema=True
         )
 }}
-

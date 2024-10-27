@@ -1,6 +1,29 @@
 version: 2
 
 models:
+  - name: budget_version
+    latest_version: 1
+    config:
+      materialized: table
+      contract:
+        enforced: true
+    description: >
+      Info about budget
+    versions:
+      - v: 1
+      - v: 2
+        columns:
+          - include: all
+            exclude: [quantity]
+    columns:
+      - name: product_id
+        data_type: varchar
+      - name: quantity
+        data_type: int
+      - name: month
+        data_type: date
+      - name: date_load
+        data_type: TIMESTAMP_TZ
   - name: addresses
     description: >
       Info about addresses for users and delivery orders.
@@ -165,8 +188,7 @@ models:
         description: >
           Actual timestamp of delivery (UTC).
       - name: status_order
-        description: >
-          Status of the order.
+        description: "{{ doc('order_status') }}"
       - name: date_load
         description: >
           Date that the data was loaded.
